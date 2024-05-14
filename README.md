@@ -1,5 +1,5 @@
 # AMD
-Early diagnosis and grading of age related macular degeneration using deep learning 
+# Early diagnosis and grading of age related macular degeneration using deep learning 
 ![IMG_0282](https://github.com/RadhaVaishnavi/AMD/assets/84319477/1439dd10-269d-4cef-95f1-22dba0551732)
 
 One particular use of machine and deep learning is classification. In this thesis we want
