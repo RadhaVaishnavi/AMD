@@ -2,8 +2,8 @@
 # Early diagnosis and grading of age related macular degeneration using deep learning 
 ![IMG_0283](https://github.com/RadhaVaishnavi/AMD/assets/84319477/b56b2a6d-8f35-4c9a-ac4e-13434b55e8a2)
 
-One particular use of machine and deep learning is classification. In this thesis we want
-to propose a novel classification model based on deep learning that will be able to classify and
+One particular use of machine and deep learning is classification. In this thesis we 
+propose a novel classification model based on deep learning that will be able to classify and
 identify different retinal diseases at early stages with high accuracy that outperform the state
 of the art approaches, previous works and the diagnosis of experts in ophthalmology. Vision
 and eye health are one the most crucial things in human life, it needs to be preserved to maintain
