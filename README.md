@@ -13,6 +13,6 @@ almost no chance to reverse vision and cure it, which means that the patient wil
 vision ability partially, and may be entirely. We propose here three deep convolutional neural
 networks architectures and tuned three pretrained models that have been trained on large
 dataset such as Inception, VGG-16 and ResNET. In order to evaluate our model we have
-compared the diagnosis of 7 experts with the performence of our model. Our porposed model
+compared the diagnosis of 7 experts with the performence of our model. Our proposed model
 outperformed the diagnosis of 6 out of 7 experts also the previous published works using the
 same data, where we obtained an accuracy up to 99.27%.
