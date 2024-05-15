@@ -17,195 +17,91 @@ compared the diagnosis of 7 experts with the performence of our model. Our propo
 outperformed the diagnosis of 6 out of 7 experts also the previous published works using the
 same data, where we obtained an accuracy up to 99.27%.
 
-3.1.	Designed PyMFT-Net model for AMD detection
+# Designed PyMFT-Net model for AMD detection
 This project presents PyMFT-Net designed for the detection of AMD by utilizing OCT images. At first, the OCT image accumulated from the database is allowed for layer segmentation using CE-Net [9] with modified loss functions formulated using Dice, Tversky loss, weighted binary cross-entropy, and regularization loss. Then, the extraction of features, like reflectivity, thickness, curvature [10], statistical features like mean, correlation, energy, skewness, entropy, and kurtosis [27], and the Local Texton XOR pattern (LTXOR) [11] is executed using different feature extractors. Later, the AMD detection is executed using the PyMFT-Net approach. Here, the PyMFT-Net is designed by incorporating PyramidNet [12], DMN [13], and Taylor series [14]. Finally, the output obtained while detecting AMD is categorized into four types, namely CNV, DME, DRUSEN, and normal. In addition, figure 1 shows the systematic view of PyMFT-Net technique designed for AMD detection.
+![Screenshot 2024-05-15 134458](https://github.com/RadhaVaishnavi/AMD/assets/84319477/c9e1ff5f-f580-4bd3-8e11-ebe339867ce7)
+Systematic view of PyMFT-Net technique used for the detection of AMD
 
-
-Figure 3.1. Systematic view of PyMFT-Net technique used for the detection of AMD
-
-3.2.	Acquisition of input image
+# Acquisition of input image
 The input image is initially accumulated from OCT and Chest X-Ray datasets [15] for the detection of AMD and the dataset is given as,
-A  A1, A2 , A3,..., AR..., AW 	(1)
- 
+A  A1, A2 , A3,..., AR..., AW 
 Here, the database accumulated for the detection of AMD is symbolized as A , the Rth OCT
- 
-image taken into consideration to detect AMD is given by available in the dataset.
-3.3.	Layer segmentation using CE-Net
- 
-A , and W represents total data
- 
+image taken into consideration to detect AMD is given by A , and W represents total data available in the dataset.
 
-Generally, the layer segmentation method helps to effectively distinguish various retinal layers to assist clinicians in monitoring and identifying eye diseases, namely AMD, diabetic retinopathy, glaucoma, and so on. The spatial smoothness as well as continuity of healthy retinal layers are identified by layer segmentation, thereby determining the changes in
+# Layer segmentation using CE-Net
+ Generally, the layer segmentation method helps to effectively distinguish various retinal layers to assist clinicians in monitoring and identifying eye diseases, namely AMD, diabetic retinopathy, glaucoma, and so on. The spatial smoothness as well as continuity of healthy retinal layers are identified by layer segmentation, thereby determining the changes in
 retinal layers due to disease. In this research, the input OCT image  is initially subjected to
-R
-
-CE-Net [9] along with modified loss functions for the segmentation of retinal layers. Here, the loss functions, like Dice, Tversky loss, weighted binary cross-entropy, and regularization loss are considered for the segmentation task. The segmentation of layer from the input OCT image A is explicated as follows,
--Architecture of CE-Net
-
+R CE-Net [9] along with modified loss functions for the segmentation of retinal layers. Here, the loss functions, like Dice, Tversky loss, weighted binary cross-entropy, and regularization loss are considered for the segmentation task. The segmentation of layer from the input OCT image A is explicated as follows,
+# Architecture of CE-Net
 The CE-Net [9] uses a Residual Multi-kernel Pooling (RMP) block and Dense Atrous Convolution (DAC) block for preserving the spatial information and get more abstract features to perform the segmentation task. The CE-Net mainly possesses three layers, namely the feature decoder module, feature context extractor module, and feature encoder module. The processes carried out are demonstrated below,
 (a)	Feature encoder module: In this layer, pretrained ResNet is used instead of the encoder module in the U-Net while retaining the blocks used for feature extraction without the fully connected and average pooling layers. Moreover, it also accelerates the network convergence and avoids vanishing gradient issues by adding a shortcut mechanism.
+
 (b)	Feature context extractor module: The context extractor module is used for the extraction of high-level feature maps, which also extract context semantic information from the input image. This module mainly comprises the RMP block and DAC block, which also adopt atrous convolution to execute the segmentation task. Due to pooling layers, the atrous convolution is utilized to perform dense segmentation for overcoming semantic information loss in images. The atrous convolution is performed to effectively determine the wavelet transform of two- dimensional signals. Similarly, the DAC blocks are used to encode high-level semantic feature
- 
 maps, which possess four cascade branches with increasing total atrous convolution. Then, DAC uses various receptive fields and applies convolution for Rectified Linear Units (ReLU) activation in each atrous branch. At last, the actual features are directly added with other features, like the ResNet shortcut mechanism. The DAC block is used for the extraction of features from objects with different sizes by incorporating atrous convolution with various atrous rates.
 Generally, large variations in object size pose a major challenge in image segmentation. Thus, RMP blocks that rely on various effective field-of-views are employed to identify objects of various sizes. The global context information with various receptive field sizes is encoded by the RMP. A convolution is performed after each level of pooling to decrease the dimension of weights and computational cost. Further, the upsampling of the low-dimension feature map is executed to get the features of the same size as the actual feature map using bilinear interpolation and the upsampled original feature maps are finally concatenated.
+
 (c)	Feature decoder module: The extracted large semantic features from the feature extractor module and context extractor module are restored by adopting the feature decoder module. Here, the information loss is remedied because of striding convolution operation and consecutive pooling by taking some detailed information from the encoder to the decoder by using skip connections. Moreover, the decoding performance is increased by adopting an efficient block. The decoder performs deconvolution and upscaling operations. Here, the deconvolution operation enlarges the image, and the upscaling operation is performed to enhance the image size using linear interpolation. Particularly, transposed convolution is used to learn self-adaptive mapping for restoring more detailed information features. Finally, the resultant segmented output ES is obtained from the feature decoder module based on the decoder block and skip connections from the input OCT image AR . In addition, figure 2 elucidates the structure of CE-Net for the segmentation of layers.
- 
+![Screenshot 2024-05-15 135150](https://github.com/RadhaVaishnavi/AMD/assets/84319477/50580fbf-a269-4fea-9181-d53cc6b53073)
 
- 
-Input OCT image,
-Segmented OCT image,  
+# DATASET & IMPLEMENTATION DETAILS
 
-Figure 2. Structure of CE-Net
- 
-Modified loss function
+# Dataset description
+We have used the OCT images dataset from, the dataset is organized into 3 folders (train, test, val) and contains subfolders for each image category. There are 84,495 X-Ray images (JPEG) and 4 categories (NORMAL,CNV,DME,DRUSEN). Optical coherence tomography (OCT) images (Spectralis OCT, Heidelberg Engineering, Germany) were selected from retrospective cohorts of adult patients from the Shiley Eye Institute of the University of California San Diego, the California Retinal Research Foundation, Medical Center Ophthalmology Associates, the Shanghai First People’s Hospital, and Beijing Tongren Eye Center between July 1, 2013 and March 1, 2017.
+# Image Labeling
+Before training, each image went through a tiered grading system consisting of multiple layers of trained graders of increasing expertise f or verification and correction of image labels. Each image imported into the database started with a label matching the most recent diagnosis of the patient. The first tier of graders consisted of undergraduateand medical students who had taken and passed an OCT interpretation course review. This first tier of graders conducted initial quality control and excluded OCT images containing severe artifacts or significant image resolution reductions. The second tier of graders consisted of four ophthalmologists who independently graded each image that had passed the first tier. The presence or absence of choroidal neovascularization (active or in the form of subretinal fibrosis), macular edema, drusen, and other pathologies visible on the OCT scan were recorded. Finally, a third tier of two senior independent retinal specialists, each with over 20 years of clinical retina experience, verified the true labels for each image. The dataset selection and stratification process is displayed in a CONSORT-style diagram. To account for human error in grading, a validationsubset of 993 scans was graded separately by two ophthalmologist graders, with disagreement in clinical labels arbitrated by a senior retinal specialist.
+# Dataset pre-processing
+Preprocessing phase is one crucial phase in image classification tasks, images needs to be looked at, the shape, the size and the balanced class are preliminary things. Our dataset was taken from different research labs, what makes the sizes of the images very different (496, 768, 3), (496, 1024, 3), (496, 512, 3), (496, 1536, 3), (512, 512, 3) the first two values refers to the width and the height of the image, and the third one refers to the image channels , meaning in this case that the images are in RGB 1 .
 
-The CE-Net segments each pixel as background or foreground, that is a pixel-wise classification issue. The widely utilized loss functions, namely Dice, Tversky loss, weighted binary cross-entropy, and regularization loss are considered to replace the common loss that is used during the segmentation task. The loss function is expressed as,
-Loss function  e1 W   e2  X   e3 Y   e4 Z 	(2)
+![Screenshot 2024-05-15 135451](https://github.com/RadhaVaishnavi/AMD/assets/84319477/91a0b29b-5ee0-437d-a00f-5eada630fa52)
 
-where, the scaling factors are signified as e , e , e , e , the dice coefficient loss function is indicated asW , X resembles Tversky loss, Y symbolizes weighted binary cross-entropy, and Z denotes regularization loss.
--Dice coefficient loss: The dice coefficient is utilized to estimate the segmentation performance in the availability of ground truth. The dice coefficient is computed by the expression,
-W E, F  	 	(3)
+Figure 4.1: Plotting the images on each different channel
 
-here, the resultant output obtained during the segmentation task is signified as E , and its
-corresponding ground truth is denoted by F .
+•	Images resizing: Importing the images with the original sizes will lead to use big part of hardware resources and the time of processing will highly increase, we decided to reduce the image sizes to 224 X 224 pixels, same as Imagenet dataset images sizes.
 
--Tversky loss: It is the generalized form of dice coefficient that helps to attain improved trade- off among recall and precision during the segmentation of large unbalanced OCT image database using CE-Net. The Tversky loss is expressed by,
- 
-X E, F   	ES  FG	
-ES FG   1  ES  FG  1    ES 1  FG 
-where, the hyper-parameter is symbolized as  .
- 
+•	Data Resampling: The dataset is splitted into 3 folders as explained in the previous section, with only 8 images per class for validation and 242 images for test and the rest for training. as detailed in table URL 3.1. This split is not efficient and can lead to extream overfitting. We made another split of 80% for training , 20% for validation (table 3.2) and after constructing our model we tested our model on 968 images.
 
-(4)
- 
+•	Balanced classes The dataset is unbalanced, meaning each class have different number of images, which can lead to overfitting in some cases, we decided to do experiments on both balanced and unbalanced classes cases.
 
--Weighted binary cross entropy: It is used to calculate the variation among the actual and predicted binary outcomes. It is computed by,
-Y  E, F     h log  FG   1  ES  log 1  FG 	(5) here, h signifies true probability distribution.
--Regularization loss: It is a generic function that helps to increase the generalization performance of CE-Net. Here, the regularisation method called weight decay is used to
- 
-suppress the weight of CE-Net. The weight decay applies dropout and random transformation to create a large diversified training set.
-Thus, the resultant segmented output E obtained is determined from the input OCT image A
-S	R
- 
-using CE-Net and the output extraction.
- 
-E is further subjected to extract suitable features during feature
- 
-3.4.	Feature extraction
-The redundant or irrelevant features are eliminated from the resultant segmented layer output E by highlighting key patterns and preserving important features via feature extraction. Here, the suitable features are extracted using feature extractors, like reflectivity, thickness, curvature [10], statistical features like mean, correlation, energy, skewness, entropy, and kurtosis [27], and LTXOR [11]. The extraction process executed is described below,
-1)	Curvature
+![Screenshot 2024-05-15 135718](https://github.com/RadhaVaishnavi/AMD/assets/84319477/aa39607b-297d-4fda-84e7-c7d0801e8115)
+![Screenshot 2024-05-15 135728](https://github.com/RadhaVaishnavi/AMD/assets/84319477/8211afab-1ff9-4081-a849-ebc6b5748c43)
 
-The curvature [10] of the segmented layer output E is determined by joining Menger curvature values computed for all points across the layer after smoothening the local weighted polynomial surface and the resultant curvature feature is signified by L1 .
-2)	Reflectivity
+Encoding categories The class labels are strings ( CNV , DRUSEN,NORMAL, DME) Since we are working with Numpy python library, it only accepts array lists numbers, we need to ’one-hot-encode’ our target variable. One hot encoding is a process by which categorical variables are converted into a form that could be provided to ML algorithms to do a better job in . This means that a column will be created for each output category and a binary variable is inputted for each category.
 
-It is determined from two regions per scan, such as the temporal sides of the foveal peak and the thickest portion of the retina, where the extracted reflectivity feature is denoted as L2 .
-3)	Thickness
+![Screenshot 2024-05-15 135817](https://github.com/RadhaVaishnavi/AMD/assets/84319477/4031a471-b951-40c7-8cdb-0a450af4f7e4)
 
-The Euclidean distance among the corresponding points of the lower and upper boundaries of the segmented layer is computed to determine the thickness of the segmented layer and the extracted thickness feature is given by L3 .
-4)	LTXOR
+For example, the CNV category in the dataset is a 1. This means that the first number in our array will have a 1 and the rest of the array will be filled with 0.
 
-The enhanced version of LXTOR is termed LTXOR [11] feature descriptor, which helps to map the texton shapes more effectively in the Gaussian plane. In LTXOR, the texton images are generated by employing different texton shapes, and the images are then split into overlapping sub-blocks. Then, the position of gray values is updated and the texton picture
- 
-collects the center of each pixel and its surrounding neighbors after the determination of text on the image. Later, XOR function is applied between the neighbors and center texton. The LTXOR patterns is expressed by,
- 
-LTXOR
-l ,D
- 
- l
-n1
- 
-2n1  f S    S  	(6)
-T	n	T	z
- 
+![Screenshot 2024-05-15 135902](https://github.com/RadhaVaishnavi/AMD/assets/84319477/011dcf95-0519-4588-ac09-8b6b5ddc705f)
 
-here, the centre and neighbor pixels are signified as  p and z , D designates radius, and the corresponding texton shape is represented as ST  p  and ST z , the XOR function is given by  . Moreover, the texton images are converted into LTXOR maps with values fixed from 0 to 2l 1, here the total neighbors are symbolized as l . Once the LTXOR pattern is computed for pixel i, j  , and the histogram construction is given by,
-Q1 Q2
-LTXORHist   f LTXOR i, j , k ;	k  0, 2l 1	(7)
-i1 j1
+# Comparative discussion
+The table 5.1 represents the proposed PyMFT-Net techniques with implemented techniques with TNR, TPR, and accuracy. The accuracy of 91.876% is attained by the PyMFT-Net while the accuracy evaluated by CM-CNN, SVM, VGG-16, and ResNet50 are 84.765%, 85.78676%, 88.765%, and 89.5435 correspondingly for learning set of 90%,. The high TNR value of 92.6545% is produced by PyMFT-Net, while the TNR evaluated by CM-CNN, SVM, VGG-16, and ResNet50 are 85.876%, 86.755%, 87.5434%, and 89.7554%. The maximum TPR of 94.7866% is achieved by the devised PyMFT-Net, while the implemented techniques CM-CNN, SVM, VGG-16, and ResNet50 are 88.8665%, 89.53435%, 90.5343%, and 91.765% correspondingly. Massive enhancement in performance is seen in the proposed PyMFT-Net technique because of the utilization of the PyramidNet model and the application of DMN for AMD detection. The PyramidNet has the ability to decrease the feature map dimensionality while improving the efficacy and the DMN is highly effective in resource-constrained environments and thus the fusion of these two networks led to enhanced detection performance.
+![Screenshot 2024-05-15 140039](https://github.com/RadhaVaishnavi/AMD/assets/84319477/2b6cdf0a-5c98-474b-b9fb-ac79a5f98ab2)
+
+# OUTPUTS
+
+![Screenshot 2024-05-15 141123](https://github.com/RadhaVaishnavi/AMD/assets/84319477/07eefc3f-f662-4ca6-8421-80f86cd1e86b)
+
+![Screenshot 2024-05-15 141525](https://github.com/RadhaVaishnavi/AMD/assets/84319477/b081dcc9-0d6c-4725-b38b-35f895b9525d)
+
+![Screenshot 2024-05-15 140745](https://github.com/RadhaVaishnavi/AMD/assets/84319477/8d1942e7-81ee-48ec-a168-8d0e9354eeec)
+![Screenshot 2024-05-15 141537](https://github.com/RadhaVaishnavi/AMD/assets/84319477/e90738e5-9c42-4d2e-aef7-3eade6528831)
+![Screenshot 2024-05-15 141548](https://github.com/RadhaVaishnavi/AMD/assets/84319477/4b3fe551-221c-41f1-9d67-87d8fb1ac2b5)
+
+![Screenshot 2024-05-15 141433](https://github.com/RadhaVaishnavi/AMD/assets/84319477/dc2f44df-f902-457e-b89b-35bcef8c1c02)
+![Screenshot 2024-05-15 141316](https://github.com/RadhaVaishnavi/AMD/assets/84319477/e1c6daf8-0953-4a76-bdce-f5fe72155cc8)
+![Screenshot 2024-05-15 141325](https://github.com/RadhaVaishnavi/AMD/assets/84319477/02ee40e4-f2df-4bdc-8f45-71522d2b919e)
+![Screenshot 2024-05-15 141334](https://github.com/RadhaVaishnavi/AMD/assets/84319477/00230963-5731-4af1-b589-6e64e09ac6fc)
+![Screenshot 2024-05-15 141342](https://github.com/RadhaVaishnavi/AMD/assets/84319477/88159ffd-c5eb-4064-8311-ff96a9bf473f)
+![Screenshot 2024-05-15 141352](https://github.com/RadhaVaishnavi/AMD/assets/84319477/dfd11ab9-0cff-4cf1-857c-dcd92365fa24)
+![Screenshot 2024-05-15 141400](https://github.com/RadhaVaishnavi/AMD/assets/84319477/834e0e23-edf2-41a1-98e4-686752e828fc)
+![Screenshot 2024-05-15 141408](https://github.com/RadhaVaishnavi/AMD/assets/84319477/a854758d-48df-4d60-b88b-32046f6731a9)
+![Screenshot 2024-05-15 141416](https://github.com/RadhaVaishnavi/AMD/assets/84319477/f3a54502-35e2-4b14-a018-40b8dbb303de)
+![Screenshot 2024-05-15 141425](https://github.com/RadhaVaishnavi/AMD/assets/84319477/6c684cf0-4f4f-4629-8f36-a88251e9f8f7)
+![Screenshot 2024-05-15 141449](https://github.com/RadhaVaishnavi/AMD/assets/84319477/c27eed47-c0a5-4ed9-9410-c97d88cc0ef9)
+![Screenshot 2024-05-15 141441](https://github.com/RadhaVaishnavi/AMD/assets/84319477/6683dd5c-d041-4132-bf96-7f3e2ab3fe96)
 
 
-where, k signifies random number chosen among 0 and 2l 1, the input size of image is symbolized as Q1  Q2 , and L4 resembles the extracted LTXOR feature.
-5)	Statistical features
-
-The statistical features, such as mean, correlation, energy, skewness, entropy, and kurtosis [27] are effectively extracted from the segmented layer and the extraction performed is explicated below,
--Mean: The distribution of concentrated data from the segmented layer is termed mean, which is estimated by,
- 
-i1
-L5  G(d )
-d 0
- 
-
-(8)
- 
-
-here, d signifies the grey scale level of image, G(d ) symbolizes the probability of d , i
-signifies the number of grey levels, and the resultant mean feature extracted is denoted as L5 .
-
--Correlation: The correlation feature is used to express the spatial dependency among the pixels, where L6 denotes the extracted correlation feature and is expressed as,
- 
-M 1 N 1
- (u, v)P(u, v)  au av
-L    u0 v0	
- 
 
 
-(9)
- 
-6	b b
-u v
-Here, the normalized value of the gray scale is signified as P u, v, the total pixels along the axis is given by M and N , the standard deviation as well as mean in horizontal spatial domain is symbolized by bu and au , correspondingly the standard deviation as well as mean
-for vertical spatial domain is denoted by bv and av .
 
--Energy: The equality between the image pixel M , N is measured using energy, which is symbolized as L7 and is formulated as,
- 
-
-M 1 N 1
-L7 	P(u, v)
-u 0 v0
- 
-
-(10)
- 
-where, the blocks axis of grayscale is given by u , and v , and P resembles the value of gray level.
--Skewness: The skewness is defined as the distribution of degree of asymmetry of a specific feature around the mean. It is used to compute the symmetry or lack of symmetry in the
- 
-resultant segmented layer. Thus, the extracted skewness feature is given as as,
- 
-L8 and is expressed
- 
-3  i1	3	
- 
-L8  L5 d  L5 
-d 0
- 
- G(d )
-	(11)
- 
-
--Entropy: The randomness in neighborhood intensity values or textural image is characterized is using the entropy feature, which is given by,
- 
-
-M 1 N 1
-L9 	P(u, v)  log P(u, v)
-u 0 v0
-
-
-Here, the extracted entropy feature is signified as L9 .
- 
-
-(12)
- 
-
--Kurtosis: Kurtosis is used to describe the distribution of the shape of a random variable’s probability and L10 signifies the extracted kurtosis feature and is expressed by,
- 
-L	 L4  i1 		4 		(13)
- 
-10	5 
-d 0
- 
-d	L5	G(d )
-
- 
-
-Therefore, the statistical features LF extracted from the segmented layer ES , which is expressed by,
 
