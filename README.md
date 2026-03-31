@@ -102,4 +102,3 @@ ResNet50 outperformed the other models thanks to:
 
 The model shows promising results for assisting ophthalmologists in early screening of AMD-related conditions.
 
-## Repository Structure
