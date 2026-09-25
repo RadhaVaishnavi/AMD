@@ -1,6 +1,3 @@
-# Early Diagnosis and Grading of Age-Related Macular Degeneration (AMD) using Deep Learning
-
-![Project Banner](https://github.com/RadhaVaishnavi/AMD/assets/84319477/b56b2a6d-8f35-4c9a-ac4e-13434b55e8a2)
 
 # AMD
 # Early diagnosis and grading of age related macular degeneration using deep learning 
